@@ -46,6 +46,7 @@ button{font:inherit;cursor:pointer}
 .garabato{position:absolute;color:#6E685E;opacity:.75}
 .garabato svg{width:100%;height:auto;overflow:visible}
 .solo-ancho{display:none}
+.solo-movil{display:none}
 @media (min-width:900px){.solo-ancho{display:block}}
 
 /* ── Carretera fija ─────────────────────────────── */
@@ -77,7 +78,7 @@ header{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:44px 2
 .retrovisor{position:relative;display:inline-block;width:min(100%,600px);padding-top:34px;--forma:polygon(94.00% 0.0%,94.93% 0.4%,95.80% 1.6%,96.61% 3.5%,97.32% 6.1%,97.93% 9.4%,98.40% 13.2%,98.74% 17.5%,98.94% 22.1%,98.98% 27.0%,98.88% 32.0%,97.90% 60.0%,97.59% 66.3%,97.12% 72.4%,96.49% 78.2%,95.73% 83.5%,94.85% 88.3%,93.88% 92.4%,92.83% 95.6%,91.74% 98.0%,90.63% 99.5%,89.53% 100.0%,10.48% 100.0%,9.37% 99.5%,8.26% 98.0%,7.17% 95.6%,6.12% 92.4%,5.15% 88.3%,4.27% 83.5%,3.51% 78.2%,2.88% 72.4%,2.41% 66.3%,2.10% 60.0%,1.12% 32.0%,1.02% 27.0%,1.06% 22.1%,1.26% 17.5%,1.60% 13.2%,2.07% 9.4%,2.68% 6.1%,3.39% 3.5%,4.20% 1.6%,5.07% 0.4%,6.00% 0.0%);filter:drop-shadow(0 18px 18px rgba(35,37,43,.35))}
 .armazon{position:relative;padding:6px;clip-path:var(--forma);background:linear-gradient(180deg,#3a3e45 0%,#141518 35%,#0b0c0e 100%)}
 .armazon .cristal{box-shadow:none}
-@media (max-width:759px){.retrovisor{--forma:polygon(88.00% 0.0%,89.87% 0.2%,91.68% 1.0%,93.39% 2.2%,94.95% 3.8%,96.32% 5.9%,97.47% 8.2%,98.37% 10.9%,99.00% 13.8%,99.35% 16.9%,99.40% 20.0%,97.72% 76.0%,97.44% 79.8%,96.85% 83.4%,95.95% 86.9%,94.77% 90.1%,93.34% 93.0%,91.70% 95.4%,89.88% 97.4%,87.94% 98.8%,85.91% 99.7%,83.84% 100.0%,16.16% 100.0%,14.09% 99.7%,12.06% 98.8%,10.12% 97.4%,8.30% 95.4%,6.66% 93.0%,5.23% 90.1%,4.05% 86.9%,3.15% 83.4%,2.56% 79.8%,2.28% 76.0%,0.60% 20.0%,0.65% 16.9%,1.00% 13.8%,1.63% 10.9%,2.53% 8.2%,3.68% 5.9%,5.05% 3.8%,6.61% 2.2%,8.32% 1.0%,10.13% 0.2%,12.00% 0.0%)}}
+@media (max-width:759px){.retrovisor{--forma:polygon(92.00% 0.0%,93.24% 0.4%,94.43% 1.5%,95.54% 3.3%,96.54% 5.7%,97.41% 8.8%,98.11% 12.4%,98.65% 16.4%,98.99% 20.7%,99.14% 25.3%,99.10% 30.0%,98.14% 62.0%,97.85% 67.9%,97.34% 73.7%,96.64% 79.3%,95.75% 84.3%,94.70% 88.9%,93.52% 92.7%,92.24% 95.9%,90.88% 98.1%,89.48% 99.5%,88.07% 100.0%,11.93% 100.0%,10.52% 99.5%,9.12% 98.1%,7.76% 95.9%,6.48% 92.7%,5.30% 88.9%,4.25% 84.3%,3.36% 79.3%,2.66% 73.7%,2.15% 67.9%,1.86% 62.0%,0.90% 30.0%,0.86% 25.3%,1.01% 20.7%,1.35% 16.4%,1.89% 12.4%,2.59% 8.8%,3.46% 5.7%,4.46% 3.3%,5.57% 1.5%,6.76% 0.4%,8.00% 0.0%)}}
 @media (min-width:760px){header .intro{max-width:1000px;padding:6px 0}.retrovisor{width:min(100%,1000px)}.cristal{padding:46px 60px 40px}.solo-movil{display:none}h1{font-size:clamp(48px,6.4vw,80px)}}
 .retrovisor::before{content:"";position:absolute;top:0;left:50%;width:34px;height:40px;transform:translateX(-50%);background:linear-gradient(#2c2f35,#1c1e22);border-radius:10px 10px 4px 4px}
 .cristal{position:relative;clip-path:var(--forma);border-radius:0;padding:36px 36px 32px;background:linear-gradient(175deg,#4b525d 0%,#2a2f37 55%,#1f2329 100%);box-shadow:0 0 0 3px #15171a,0 22px 40px -18px rgba(35,37,43,.55);overflow:hidden}
@@ -91,7 +92,7 @@ header{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:44px 2
 .cristal::before{z-index:1}
 .cristal h1,.cristal .aviso{z-index:2;text-shadow:0 2px 14px rgba(0,0,0,.6)}
 .led{z-index:2;position:absolute;right:12%;bottom:16px;width:6px;height:6px;border-radius:50%;background:#7CD07A;box-shadow:0 0 8px #7CD07A}
-h1{position:relative;font-family:var(--display);font-weight:900;font-size:clamp(38px,8.5vw,72px);line-height:.95;letter-spacing:-.025em;margin:0;color:#fff}
+h1{position:relative;white-space:nowrap;font-family:var(--display);font-weight:900;font-size:clamp(24px,7.4vw,72px);line-height:.95;letter-spacing:-.025em;margin:0;color:#fff}
 .aviso{position:relative;font-family:var(--display);font-size:clamp(11px,2.5vw,13px);margin:12px 0 0;color:rgba(255,255,255,.7)}
 .intro{max-width:32em;margin:30px auto 0;font-size:19px;position:relative;padding:6px 10px;text-shadow:0 0 8px var(--fondo),0 0 16px var(--fondo),0 0 2px var(--fondo)}
 
@@ -218,7 +219,7 @@ details.el-reto p{margin:4px 0 0;white-space:pre-line}
 @media (max-width:520px){
   body{font-size:17px}
   header{padding-top:30px}
-  .cristal{padding:28px 22px 26px}
+  .cristal{padding:18px 12px 16px}
   main{padding:24px 14px 70px}
   .carroceria{padding:0 14px}
   .habitaculo{padding:20px 12px}
