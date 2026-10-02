@@ -326,7 +326,14 @@ details.el-reto p{margin:4px 0 0;white-space:pre-line}
 const API_URL = 'https://script.google.com/macros/s/AKfycbz-UpitxXsIUbhhZ73FmGFo0odcFBL91OTq9_1iwzlj2NaKkn8G8Za2xYHShaFZiJwu/exec';
 /* ═══════════════════════════════════════════════ */
 
-const DEMO = !API_URL || location.search.includes('demo');
+const LLENO = location.search.includes('lleno');
+const DEMO = !API_URL || LLENO || location.search.includes('demo');
+const valeDemo = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300"><rect width="600" height="300" rx="24" fill="#C8201A"/><rect x="14" y="14" width="572" height="272" rx="16" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="10 8"/><text x="300" y="130" font-family="Arial" font-weight="900" font-size="56" fill="#fff" text-anchor="middle">VALE</text><text x="300" y="185" font-family="Arial" font-size="26" fill="#fff" text-anchor="middle">Aquí irá tu regalo (vista de prueba)</text></svg>');
+function demoLleno() {
+  const slots = [];
+  for (let i = 1; i <= 15; i++) slots.push({id: String(i), nombre: 'Amigo ' + i, retrato: 'demo', reto: 'Reto de ejemplo número ' + i + '.', foto: 'demo', dedicatoria: 'Dedicatoria de ejemplo de la plaza ' + i + '.'});
+  return {total: 15, slots, vale: {id: 'demo'}};
+}
 let firma = '', estado = null, plaza = null, fotoPreparada = null, primeraCarga = true;
 const vistas = new Set();
 const ahora = new Set();
@@ -410,7 +417,8 @@ const demo = {total:15, slots:[
 
 async function cargar() {
   try {
-    if (DEMO) estado = JSON.parse(JSON.stringify(demo));
+    if (LLENO) estado = demoLleno();
+    else if (DEMO) estado = JSON.parse(JSON.stringify(demo));
     else {
       if (primeraCarga) { try { const g = localStorage.getItem('porelretrovisor'); if (g) { estado = JSON.parse(g); firma = g; pintar(); } } catch (e) {} }
       const r = await fetch(API_URL, {cache:'no-store'}); estado = await r.json();
@@ -495,14 +503,14 @@ function pintar() {
   const bandera = `<div class="bandera"><svg viewBox="-4 0 248 158" aria-hidden="true"><defs><pattern id="cuadros" width="24" height="24" patternUnits="userSpaceOnUse"><rect width="24" height="24" fill="#fff"/><rect width="12" height="12" fill="#23252B"/><rect x="12" y="12" width="12" height="12" fill="#23252B"/></pattern></defs><g transform="translate(140 154) scale(-1 1) rotate(22)"><path d="M0 -146C22 -158 48 -134 88 -148L88 -92C48 -78 22 -102 0 -90Z" fill="url(#cuadros)" stroke="#23252B" stroke-width="2.5" stroke-linejoin="round"/><path d="M0 2V-150" stroke="#23252B" stroke-width="5" stroke-linecap="round"/><circle cx="0" cy="-152" r="3.5" fill="#23252B"/></g><g transform="translate(100 154) rotate(22)"><path d="M0 -146C22 -158 48 -134 88 -148L88 -92C48 -78 22 -102 0 -90Z" fill="url(#cuadros)" stroke="#23252B" stroke-width="2.5" stroke-linejoin="round"/><path d="M0 2V-150" stroke="#23252B" stroke-width="5" stroke-linecap="round"/><circle cx="0" cy="-152" r="3.5" fill="#23252B"/></g></svg></div>`;
   if (hechas >= total) {
     f.className = 'final abierto';
-    const v = estado.vale;
+    const v = estado.vale, vDemo = v && v.id === 'demo';
     f.innerHTML = v
       ? `${bandera}<h2>Has llegado a la meta</h2><p>Quince plazas llenas. Ahora te toca conducir de verdad.</p>
-         <img class="vale-img" src="${img2(v.id)}" alt="Tu regalo">
-         <div class="vale-botones"><a class="vale-btn" href="https://drive.google.com/uc?export=download&id=${v.id}">Descargar el regalo</a>
-         <a class="vale-btn sec" href="https://drive.google.com/file/d/${v.id}/view" target="_blank" rel="noopener">Verlo en grande</a></div>`
+         <img class="vale-img" src="${vDemo ? valeDemo : img2(v.id)}" alt="Tu regalo">
+         <div class="vale-botones"><a class="vale-btn" href="${vDemo ? '#' : 'https://drive.google.com/uc?export=download&id=' + v.id}">Descargar el regalo</a>
+         <a class="vale-btn sec" href="${vDemo ? '#' : 'https://drive.google.com/file/d/' + v.id + '/view'}" target="_blank" rel="noopener">Verlo en grande</a></div>`
       : `${bandera}<h2>Has llegado a la meta</h2><p>Tu regalo está aparcando. Recarga en un momento.</p>`;
-    if (!f.dataset.fiesta && !primeraCarga) { f.dataset.fiesta = 1; fiesta(); }
+    if (!f.dataset.fiesta && (!primeraCarga || LLENO)) { f.dataset.fiesta = 1; fiesta(); }
   } else {
     f.className = 'final';
     const faltan = total - hechas;
