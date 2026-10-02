@@ -74,10 +74,12 @@ button{font:inherit;cursor:pointer}
 
 /* ── Cabecera: retrovisor interior ──────────────── */
 header{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:44px 20px 10px;text-align:center}
-.retrovisor{position:relative;display:inline-block;width:min(100%,600px);padding-top:34px}
+.retrovisor{position:relative;display:inline-block;width:min(100%,600px);padding-top:34px;--forma:polygon(4% 0,96% 0,100% 40%,95.5% 100%,4.5% 100%,0 40%);filter:drop-shadow(0 18px 18px rgba(35,37,43,.35))}
+.armazon{position:relative;padding:7px 9px 9px;clip-path:var(--forma);background:linear-gradient(to top,#C8201A 0 4px,transparent 4px),linear-gradient(170deg,rgba(255,255,255,.18),transparent 45%),repeating-linear-gradient(45deg,#17191d 0 3px,#2a2d33 3px 6px)}
+.armazon .cristal{box-shadow:none}
 @media (min-width:760px){header .intro{max-width:1000px;padding:6px 0}.retrovisor{width:min(100%,1000px)}.cristal{padding:46px 60px 40px}.solo-movil{display:none}h1{font-size:clamp(48px,6.4vw,80px)}}
 .retrovisor::before{content:"";position:absolute;top:0;left:50%;width:34px;height:40px;transform:translateX(-50%);background:linear-gradient(#2c2f35,#1c1e22);border-radius:10px 10px 4px 4px}
-.cristal{position:relative;border-radius:999px/60%;padding:36px 36px 32px;background:linear-gradient(175deg,#4b525d 0%,#2a2f37 55%,#1f2329 100%);box-shadow:0 0 0 3px #15171a,0 22px 40px -18px rgba(35,37,43,.55);overflow:hidden}
+.cristal{position:relative;clip-path:var(--forma);border-radius:0;padding:36px 36px 32px;background:linear-gradient(175deg,#4b525d 0%,#2a2f37 55%,#1f2329 100%);box-shadow:0 0 0 3px #15171a,0 22px 40px -18px rgba(35,37,43,.55);overflow:hidden}
 .cristal::before{content:"";position:absolute;inset:0;background:
   linear-gradient(105deg,transparent 0 38%,rgba(255,255,255,.12) 38% 46%,transparent 46% 50%,rgba(255,255,255,.07) 50% 53%,transparent 53%);pointer-events:none}
 .cristal::after{content:"";position:absolute;left:50%;bottom:-10%;width:70%;height:55%;transform:translateX(-50%);
@@ -267,12 +269,12 @@ details.el-reto p{margin:4px 0 0;white-space:pre-line}
 
   <header>
     <div class="retrovisor">
-      <div class="cristal">
+      <div class="armazon"><div class="cristal">
         <div class="collage-caja" aria-hidden="true"><div class="collage"></div></div>
         <h1>Por el<br class="solo-movil"> retrovisor</h1>
         <p class="aviso">Los recuerdos en el espejo están más cerca de lo que parecen</p>
       </div>
-    </div>
+    </div></div>
     <p class="intro">Joduka: ahora que empiezas una etapa nueva, no queremos que se te olvide de dónde vienes ni quiénes hemos estado contigo todo este camino. Así que, para conseguir tu regalo de boda, vas a tener que seguir quedando con nosotros y viéndonos las caras, quieras o no. Te hemos montado una carrera de fondo en este coche de quince plazas: cada uno de nosotros te ha preparado una parada en el circuito, una pequeña prueba que solo se supera juntos. Hazte la foto con quien te la ha puesto, súbela en su asiento y descubrirás lo que te ha escrito. Con cada parada el coche avanza y en la meta te espera tu regalo.</p>
   </header>
 
