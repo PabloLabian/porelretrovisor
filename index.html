@@ -192,7 +192,19 @@ details.el-reto p{margin:4px 0 0;white-space:pre-line}
 .final{padding:36px 24px 34px}
 .final p{font-size:19px}
 .final{background-image:linear-gradient(rgba(255,255,255,.88),rgba(255,255,255,.88)),conic-gradient(#23252B 25%,#fff 0 50%,#23252B 0 75%,#fff 0);background-size:auto,24px 24px}
-.final.abierto{border:3px solid var(--rojo);background:#fff}
+.final.abierto{border:3px solid var(--rojo);background:#121419;color:#fff;overflow:hidden;padding:44px 24px 70px;box-shadow:0 0 0 4px rgba(200,32,26,.25),0 0 50px rgba(255,120,40,.45)}
+.final.abierto > *:not(.fiesta-lienzo){position:relative;z-index:1}
+.fiesta-lienzo{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.final.abierto h2{color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.final.abierto p{color:#e9e6df}
+.final.abierto .premio{font-family:var(--display);font-weight:900;font-size:clamp(26px,5.5vw,42px);line-height:1.1;color:#F2C230;margin:6px 0 4px;text-shadow:0 0 18px rgba(242,194,48,.55),0 2px 0 #7a1410;animation:latido 1.2s ease-in-out infinite}
+@keyframes latido{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.final.abierto .vale-btn.sec{color:#fff;border-color:#fff}
+.final.abierto .bandera path:not([fill]){stroke:#ececec}
+.final.abierto .bandera circle{fill:#ececec}
+.final.abierto .bandera path[fill^="url"]{transform-box:fill-box;transform-origin:0% 50%;animation:ondea .7s ease-in-out infinite alternate}
+.final.abierto .bandera g:last-of-type path[fill^="url"]{animation-delay:-.35s}
+@keyframes ondea{from{transform:skewY(6deg) scaleX(.92)}to{transform:skewY(-6deg) scaleX(1.03)}}
 .vale-img{margin:20px auto 0;border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,.18)}
 .vale-botones{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:18px}
 .vale-btn.sec{background:transparent;color:var(--tinta);border:2px solid var(--tinta)}
@@ -417,7 +429,11 @@ const demo = {total:15, slots:[
 
 async function cargar() {
   try {
-    if (LLENO) estado = demoLleno();
+    if (LLENO) {
+      estado = demoLleno();
+      const k = new URLSearchParams(location.search).get('clave');
+      if (k) { try { const j = await (await fetch(API_URL + '?vista=' + encodeURIComponent(k))).json(); if (j.vale) estado.vale = j.vale; } catch (e) {} }
+    }
     else if (DEMO) estado = JSON.parse(JSON.stringify(demo));
     else {
       if (primeraCarga) { try { const g = localStorage.getItem('porelretrovisor'); if (g) { estado = JSON.parse(g); firma = g; pintar(); } } catch (e) {} }
@@ -504,12 +520,11 @@ function pintar() {
   if (hechas >= total) {
     f.className = 'final abierto';
     const v = estado.vale, vDemo = v && v.id === 'demo';
-    f.innerHTML = v
-      ? `${bandera}<h2>Has llegado a la meta</h2><p>Quince plazas llenas. Ahora te toca conducir de verdad.</p>
-         <img class="vale-img" src="${vDemo ? valeDemo : img2(v.id)}" alt="Tu regalo">
-         <div class="vale-botones"><a class="vale-btn" href="${vDemo ? '#' : 'https://drive.google.com/uc?export=download&id=' + v.id}">Descargar el regalo</a>
+    f.innerHTML = `<canvas class="fiesta-lienzo" aria-hidden="true"></canvas>${bandera}<h2>¡Has llegado a la meta!</h2><p class="premio">Aquí tienes tu Gran Premio</p>` + (v
+      ? `<div class="vale-botones"><a class="vale-btn" href="${vDemo ? '#' : 'https://drive.google.com/uc?export=download&id=' + v.id}">Descargar tu Gran Premio</a>
          <a class="vale-btn sec" href="${vDemo ? '#' : 'https://drive.google.com/file/d/' + v.id + '/view'}" target="_blank" rel="noopener">Verlo en grande</a></div>`
-      : `${bandera}<h2>Has llegado a la meta</h2><p>Tu regalo está aparcando. Recarga en un momento.</p>`;
+      : `<p>Tu premio está aparcando. Recarga en un momento.</p>`);
+    celebrar();
     if (!f.dataset.fiesta && (!primeraCarga || LLENO)) { f.dataset.fiesta = 1; fiesta(); }
   } else {
     f.className = 'final';
@@ -523,6 +538,67 @@ function marcarLargos() {
   document.querySelectorAll('.reto.fijo:not(.abierto)').forEach(r => {
     if (r.offsetParent && r.scrollHeight > r.clientHeight + 4) { r.classList.add('corta'); r.nextElementSibling.classList.add('ver'); }
   });
+}
+
+let fiestaActiva = false;
+function celebrar() {
+  if (fiestaActiva) return;
+  fiestaActiva = true;
+  const parts = [], colores = ['#C8201A','#F2C230','#ffffff','#4FA3FF','#7BD36A','#FF7A1A','#FF4FA3'];
+  let ultimo = 0;
+  const col = () => colores[Math.random() * colores.length | 0];
+  function lienzo() {
+    const c = document.querySelector('.final.abierto .fiesta-lienzo');
+    if (!c) return null;
+    const r = c.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
+    const W = Math.round(r.width * dpr), H = Math.round(r.height * dpr);
+    if (c.width !== W || c.height !== H) { c.width = W; c.height = H; }
+    return [c.getContext('2d'), r.width, r.height, dpr];
+  }
+  function explosion(x, y) {
+    const c1 = col(), c2 = col(), n = 60;
+    for (let i = 0; i < n; i++) {
+      const a = Math.PI * 2 * i / n, v = 2.5 + Math.random() * 4;
+      parts.push({t: 'chispa', x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, vida: 1, dec: .011 + Math.random() * .01, col: i % 2 ? c1 : c2});
+    }
+    parts.push({t: 'flash', x, y, vida: 1, dec: .05});
+  }
+  function frame(now) {
+    const L = lienzo();
+    if (!L) { fiestaActiva = false; parts.length = 0; return; }
+    const [ctx, w, h, dpr] = L;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    if (now - ultimo > 380) { ultimo = now; explosion(40 + Math.random() * (w - 80), 30 + Math.random() * h * .55); if (Math.random() < .35) explosion(40 + Math.random() * (w - 80), 30 + Math.random() * h * .55); }
+    if (Math.random() < .7) parts.push({t: 'confeti', x: Math.random() * w, y: -12, vx: Math.random() * 2 - 1, vy: 1.6 + Math.random() * 2.6, rot: Math.random() * 6, vr: Math.random() * .3 - .15, col: col(), vida: 1, dec: .005});
+    for (let i = 0; i < 5; i++) parts.push({t: 'fuego', x: Math.random() * w, y: h + 4, vx: Math.random() * .8 - .4, vy: -(2 + Math.random() * 3), r: 8 + Math.random() * 14, vida: 1, dec: .018 + Math.random() * .02});
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const p = parts[i];
+      p.vida -= p.dec;
+      if (p.vida <= 0 || p.y > h + 30) { parts.splice(i, 1); continue; }
+      if (p.t === 'chispa') {
+        p.vy += .05; p.vx *= .985; p.vy *= .985; p.x += p.vx; p.y += p.vy;
+        ctx.globalAlpha = p.vida; ctx.fillStyle = p.col; ctx.beginPath(); ctx.arc(p.x, p.y, 2.4, 0, 7); ctx.fill();
+      } else if (p.t === 'flash') {
+        ctx.globalAlpha = p.vida * .7;
+        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 90);
+        g.addColorStop(0, '#fffbe0'); g.addColorStop(1, 'rgba(255,190,60,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, 90, 0, 7); ctx.fill();
+      } else if (p.t === 'confeti') {
+        p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+        ctx.globalAlpha = 1; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.col; ctx.fillRect(-4, -6, 8, 12); ctx.restore();
+      } else {
+        p.x += p.vx; p.y += p.vy; p.r *= .975;
+        ctx.globalAlpha = p.vida * .85;
+        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+        g.addColorStop(0, '#fff6b0'); g.addColorStop(.35, '#ffb020'); g.addColorStop(.7, '#ff4a1a'); g.addColorStop(1, 'rgba(200,32,26,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
 }
 
 function ponerRuedas() {
