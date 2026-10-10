@@ -6,6 +6,13 @@
 <title>Por el retrovisor</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏁</text></svg>">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#F8F6F1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Retrovisor">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://script.google.com">
@@ -255,6 +262,15 @@ details.el-reto p{margin:4px 0 0;white-space:pre-line}
   .confeti{display:none}
   .rueda-carga{animation-duration:3s}
 }
+/* Aviso para instalar como app */
+.instalar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;align-items:center;gap:12px;max-width:520px;margin:0 auto;padding:10px 10px 10px 12px;background:var(--tinta);color:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.3);font:15px/1.3 var(--texto);animation:instalarSube .5s ease-out}
+.instalar img{width:44px;height:44px;border-radius:10px;flex:none}
+.instalar-txt{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.instalar-txt b{font:800 16px var(--display)}
+.instalar-txt svg{width:17px;height:17px;vertical-align:-3px;margin:0 2px}
+.instalar-si{margin-top:3px;padding:6px 18px;border:0;border-radius:999px;background:var(--rojo);color:#fff;font:800 15px var(--display);cursor:pointer}
+.instalar-x{align-self:flex-start;padding:2px 6px;border:0;background:none;color:#fff;opacity:.7;font-size:26px;line-height:1;cursor:pointer}
+@keyframes instalarSube{from{transform:translateY(30px);opacity:0}}
 </style>
 </head>
 <body>
@@ -775,6 +791,31 @@ setTimeout(brum, 1500);
 if (document.fonts) document.fonts.ready.then(() => estado && pintar());
 cargar();
 if (!DEMO) setInterval(cargar, 20000);
+
+// App instalable (iPhone y Android)
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+(function () {
+  const ua = navigator.userAgent;
+  const ios = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const instalada = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  let cerrado = false; try { cerrado = localStorage.getItem('prv-app') === 'no'; } catch (e) {}
+  if (instalada || cerrado) return;
+  let aviso = null, evento = null;
+  const compartir = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg>';
+  function mostrar(html) {
+    if (aviso) return;
+    aviso = document.createElement('div');
+    aviso.className = 'instalar';
+    aviso.innerHTML = '<img src="/icon-192.png" alt=""><div class="instalar-txt">' + html + '</div><button class="instalar-x" aria-label="Cerrar">×</button>';
+    aviso.querySelector('.instalar-x').onclick = () => { aviso.remove(); try { localStorage.setItem('prv-app', 'no'); } catch (e) {} };
+    const si = aviso.querySelector('.instalar-si');
+    if (si) si.onclick = async () => { evento.prompt(); const r = await evento.userChoice; if (r.outcome === 'accepted') aviso.remove(); };
+    document.body.appendChild(aviso);
+  }
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); evento = e; setTimeout(() => mostrar('<b>Llévatela como app</b><button class="instalar-si">Instalar</button>'), 3000); });
+  window.addEventListener('appinstalled', () => aviso && aviso.remove());
+  if (ios) setTimeout(() => mostrar('<b>Llévatela como app</b><span>Toca ' + compartir + ' y luego "Añadir a pantalla de inicio"</span>'), 3000);
+})();
 </script>
 </body>
 </html>
