@@ -101,7 +101,7 @@ header{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:44px 2
 .led{z-index:2;position:absolute;right:12%;bottom:16px;width:6px;height:6px;border-radius:50%;background:#7CD07A;box-shadow:0 0 8px #7CD07A}
 h1{position:relative;white-space:nowrap;font-family:var(--display);font-weight:900;font-size:clamp(24px,7.4vw,72px);line-height:.95;letter-spacing:-.025em;margin:0;color:#fff}
 .aviso{position:relative;font-family:var(--display);font-size:clamp(11px,2.5vw,13px);margin:12px 0 0;color:rgba(255,255,255,.7)}
-.intro{max-width:32em;margin:30px auto 0;font-size:19px;position:relative;padding:6px 10px;text-shadow:0 0 8px var(--fondo),0 0 16px var(--fondo),0 0 2px var(--fondo)}
+.intro{max-width:32em;margin:30px auto 0;font-size:19px;font-weight:700;position:relative;padding:6px 10px;text-shadow:0 0 8px var(--fondo),0 0 16px var(--fondo),0 0 2px var(--fondo)}
 
 /* ── El supercoche ──────────────────────────────── */
 main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:30px 22px 80px}
@@ -271,6 +271,7 @@ details.el-reto p{margin:4px 0 0;white-space:pre-line}
 .instalar-si{margin-top:3px;padding:6px 18px;border:0;border-radius:999px;background:var(--rojo);color:#fff;font:800 15px var(--display);cursor:pointer}
 .instalar-x{align-self:flex-start;padding:2px 6px;border:0;background:none;color:#fff;opacity:.7;font-size:26px;line-height:1;cursor:pointer}
 @keyframes instalarSube{from{transform:translateY(30px);opacity:0}}
+.intro .pd{font-weight:400;font-style:italic}
 </style>
 </head>
 <body>
@@ -314,7 +315,7 @@ details.el-reto p{margin:4px 0 0;white-space:pre-line}
         <p class="aviso">Los recuerdos en el espejo están más cerca de lo que parecen</p>
       </div>
     </div></div>
-    <p class="intro">Estimado Joduka: Ahora que empiezas una etapa nueva, no queremos que olvides de dónde vienes ni quiénes hemos estado contigo todo este camino. Somos tan majos y guapísimos como cabrones, así que, para conseguir tu regalo de boda, vas a tener que seguir quedando con nosotros y viéndonos las caras, quieras o no. Te hemos montado una carrera de fondo en donde todos somos una pieza inamovible y fundamental para que puedas cruzar la línea de meta y disfrutar, si es que lo consigues, de tu regalo de bodas.<br><br>Deberás completar todos los requisitos que forman un total de 15 paradas repletas de nostalgia (de la buena), poco sentido del ridículo y algún que otro gesto que no estés dispuesto a hacer de primeras. Es por ello que tendrás que subir una foto con cada uno de los participantes, completando de una forma meticulosa todo lo que se te pide. Pon el mejor de tu empeño porque te vigilaremos muy de cerca: una vez esté subida la imagen, ya no se podrá cambiar.<br><br>Ya en la meta y una vez hayas completado las 15 paradas con éxito, tendrás tu ansiado premio final. Para llenarte de ánimos, recibirás (con cada reto completado) el mejor de nuestros deseos para tu nueva vida, dejando a un lado la faceta punky que nos caracteriza. Así que, explicado todo, estás tardando en revisar bien cada desafío y en ponerte manos a la obra porque tu regalo de bodas te está esperando. ¡Vivan los novios!<br><br>P.D.: Como podrás comprobar, quedan 15 cartas vacías en la baraja que se te acaba de otorgar. No seas zángano y que nada te impida completarla con las fotografías de los retos que cumplas. De este modo, nunca quedará en el olvido todo lo que te va a costar conseguir el regalo final.</p>
+    <p class="intro">Estimado Joduka: Ahora que empiezas una etapa nueva, no queremos que olvides de dónde vienes ni quiénes hemos estado contigo todo este camino. Somos tan majos y guapísimos como cabrones, así que, para conseguir tu regalo de boda, vas a tener que seguir quedando con nosotros y viéndonos las caras, quieras o no. Te hemos montado una carrera de fondo en donde todos somos una pieza inamovible y fundamental para que puedas cruzar la línea de meta y disfrutar, si es que lo consigues, de tu regalo de bodas.<br><br>Deberás completar todos los requisitos que forman un total de 15 paradas repletas de nostalgia (de la buena), poco sentido del ridículo y algún que otro gesto que no estés dispuesto a hacer de primeras. Es por ello que tendrás que subir una foto con cada uno de los participantes, completando de una forma meticulosa todo lo que se te pide. Pon el mejor de tu empeño porque te vigilaremos muy de cerca: una vez esté subida la imagen, ya no se podrá cambiar.<br><br>Ya en la meta y una vez hayas completado las 15 paradas con éxito, tendrás tu ansiado premio final. Para llenarte de ánimos, recibirás (con cada reto completado) el mejor de nuestros deseos para tu nueva vida, dejando a un lado la faceta punky que nos caracteriza. Así que, explicado todo, estás tardando en revisar bien cada desafío y en ponerte manos a la obra porque tu regalo de bodas te está esperando. ¡Vivan los novios!<br><br><span class="pd">P.D.: Como podrás comprobar, quedan 15 cartas vacías en la baraja que se te acaba de otorgar. No seas zángano y que nada te impida completarla con las fotografías de los retos que cumplas. De este modo, nunca quedará en el olvido todo lo que te va a costar conseguir el regalo final.</span></p>
   </header>
 
   <main>
@@ -473,7 +474,10 @@ async function cargar() {
   primeraCarga = false;
 }
 
+// Retratos definitivos guardados en la propia web (carga rápida e igual para todos)
+const RETRATOS_FIJOS = new Set(["richi","consuheladillo","aitor","shere","fran","bea","edu","patri","carlos","mario","cani","chechu","manuelmolada","pablo","sonia"]);
 function srcRetrato(s, n) {
+  if (s.retrato !== 'demo' && RETRATOS_FIJOS.has(normN(s.nombre))) return '/r-' + normN(s.nombre) + '.webp?v=1';
   if (!s.retrato) return '';
   if (s.retrato === 'demo') return retratoDemo(s.nombre, ['#8FA7C4','#C49A8F','#9BB58A','#C4B48F'][n % 4]);
   return img1(s.retrato);
