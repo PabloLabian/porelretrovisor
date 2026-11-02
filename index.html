@@ -475,9 +475,10 @@ async function cargar() {
 }
 
 // Retratos definitivos guardados en la propia web (carga rápida e igual para todos)
+const RETRATOS_V = {richi: 2};
 const RETRATOS_FIJOS = new Set(["richi","consuheladillo","aitor","shere","fran","bea","edu","patri","carlos","mario","cani","chechu","manuelmolada","pablo","sonia"]);
 function srcRetrato(s, n) {
-  if (s.retrato !== 'demo' && RETRATOS_FIJOS.has(normN(s.nombre))) return '/r-' + normN(s.nombre) + '.webp?v=1';
+  if (s.retrato !== 'demo' && RETRATOS_FIJOS.has(normN(s.nombre))) return '/r-' + normN(s.nombre) + '.webp?v=' + (RETRATOS_V[normN(s.nombre)] || 1);
   if (!s.retrato) return '';
   if (s.retrato === 'demo') return retratoDemo(s.nombre, ['#8FA7C4','#C49A8F','#9BB58A','#C4B48F'][n % 4]);
   return img1(s.retrato);
