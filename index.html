@@ -8,6 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏁</text></svg>">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#F8F6F1">
+<meta name="version" content="20261103-1">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -866,8 +867,21 @@ if (document.fonts) document.fonts.ready.then(() => estado && pintar());
 cargar();
 if (!DEMO) setInterval(cargar, 20000);
 
+// Al volver a la app (o a la pestaña): datos frescos y, si hay versión nueva de la web, recarga
+const VERSION_WEB = (document.querySelector('meta[name="version"]') || {}).content;
+async function comprobarVersion() {
+  if (!DEMO) cargar();
+  try {
+    const t = await (await fetch('/?comprobar=' + Date.now(), {cache: 'no-store'})).text();
+    const m = t.match(/name="version" content="([^"]+)"/);
+    if (m && VERSION_WEB && m[1] !== VERSION_WEB) location.reload();
+  } catch (e) {}
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') comprobarVersion(); });
+window.addEventListener('pageshow', e => { if (e.persisted) comprobarVersion(); });
+
 // App instalable (iPhone y Android)
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js', {updateViaCache: 'none'}).catch(() => {}));
 (function () {
   const ua = navigator.userAgent;
   const ios = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
