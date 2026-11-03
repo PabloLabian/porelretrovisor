@@ -275,11 +275,12 @@ details.el-reto p{margin:4px 0 0;white-space:pre-line}
 /* Ordenador: la caja de la meta sube y el humo del coche pasa por encima */
 @media (min-width:760px){.supercoche{z-index:2}.humo-zona{pointer-events:none}#final{margin-top:-230px}}
 /* Modo fiesta (15/15): faros locos, locos por la pantalla */
-.en-fiesta .haz{animation:hazFiesta 1.1s ease-in-out infinite alternate;transform-origin:50% 100%}
+.en-fiesta .haz{height:560px;width:30%;clip-path:polygon(38% 100%,62% 100%,100% 0,0 0);animation:hazFiesta 1.1s ease-in-out infinite alternate;transform-origin:50% 100%}
+@media (max-width:520px){.en-fiesta .haz{height:320px}}
 .en-fiesta .haz.der{animation-delay:-.55s;animation-direction:alternate-reverse}
 @keyframes hazFiesta{0%{transform:rotate(-22deg);opacity:1;filter:blur(2px) hue-rotate(0deg) saturate(2)}20%{opacity:.15}35%{opacity:1}50%{transform:rotate(16deg);filter:blur(2px) hue-rotate(140deg) saturate(2)}65%{opacity:.2}80%{opacity:1}100%{transform:rotate(-8deg);opacity:1;filter:blur(2px) hue-rotate(290deg) saturate(2)}}
 .en-fiesta .luz-coche{transform-box:fill-box;transform-origin:0% 50%;animation:luzFiesta .7s ease-in-out infinite alternate}
-@keyframes luzFiesta{0%{transform:rotate(-14deg) scaleX(1.3);opacity:1}30%{opacity:.1}55%{opacity:1}100%{transform:rotate(14deg) scaleX(1.5);opacity:1}}
+@keyframes luzFiesta{0%{transform:rotate(-14deg) scaleX(2.4);opacity:1}30%{opacity:.1}55%{opacity:1}100%{transform:rotate(14deg) scaleX(2.8);opacity:1}}
 .en-fiesta .coche{filter:drop-shadow(0 0 6px rgba(255,214,90,.9))}
 .loco{position:fixed;z-index:61;pointer-events:none;line-height:1;will-change:transform;animation-timing-function:ease-in-out;animation-fill-mode:forwards;filter:drop-shadow(0 4px 6px rgba(0,0,0,.3))}
 .loco.cruza{left:0;animation-name:locoCruza;animation-timing-function:linear}
