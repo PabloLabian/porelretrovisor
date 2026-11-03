@@ -611,7 +611,7 @@ function celebrar() {
   const colores = ['#C8201A','#F2C230','#ffffff','#4FA3FF','#7BD36A','#FF7A1A','#FF4FA3'];
   const col = () => colores[Math.random() * colores.length | 0];
   const parts = [], brasas = [];
-  let ultimoFuego = 0, ultimoLoco = 0, ultimoCohete = 0, ultimaMini = 0;
+  let ultimoFuego = 0, ultimoLoco = 0, ultimoCohete = 0, ultimaMini = 0, inicioFiesta = 0;
   const FORMAS = ['rect', 'rect', 'circ', 'tira', 'tira', 'estrella'];
   const forma = () => FORMAS[Math.random() * FORMAS.length | 0];
   function tam(c, w, h) {
@@ -668,9 +668,10 @@ function celebrar() {
     const g = tam(G, vw, vh); g.clearRect(0, 0, vw, vh);
     // Fiesta por toda la página: lluvia de confeti variado, cohetes y mini explosiones
     if (parts.length < 1200) {
-      for (let k = 0; k < 3; k++) parts.push({t: 'confeti', forma: forma(), lento: true, fase: Math.random() * 6, x: Math.random() * vw, y: -14, vx: Math.random() * 1.6 - .8, vy: .6 + Math.random() * 1.6, rot: Math.random() * 6, vr: Math.random() * .2 - .1, col: col(), vida: 1, dec: .0018});
-      if (now - ultimoCohete > 480) { ultimoCohete = now; parts.push({t: 'cohete', x: 40 + Math.random() * (vw - 80), y: vh + 8, vx: Math.random() * 1.6 - .8, vy: -(9 + Math.random() * 4.5), vida: 1, dec: 0}); }
-      if (now - ultimaMini > 420) { ultimaMini = now; explosion(40 + Math.random() * (vw - 80), 60 + Math.random() * vh * .55, true); }
+      if (!inicioFiesta) inicioFiesta = now;
+      if (now - inicioFiesta < 3500) for (let k = 0; k < 3; k++) parts.push({t: 'confeti', forma: forma(), lento: true, fase: Math.random() * 6, x: Math.random() * vw, y: -14, vx: Math.random() * 1.6 - .8, vy: .6 + Math.random() * 1.6, rot: Math.random() * 6, vr: Math.random() * .2 - .1, col: col(), vida: 1, dec: .0018});
+      if (now - ultimoCohete > 1700) { ultimoCohete = now; parts.push({t: 'cohete', x: 40 + Math.random() * (vw - 80), y: vh + 8, vx: Math.random() * 1.6 - .8, vy: -(9 + Math.random() * 4.5), vida: 1, dec: 0}); }
+      if (now - ultimaMini > 1300) { ultimaMini = now; explosion(40 + Math.random() * (vw - 80), 60 + Math.random() * vh * .55, true); }
     }
     if (r.bottom > 0 && r.top < vh) {
       if (now - ultimoFuego > 330) {
@@ -823,7 +824,7 @@ function locura() {
 
 function fiesta() {
   const colores = ['#C8201A','#ffffff','#5E8C4A','#E9A23B'];
-  for (let i = 0; i < 320; i++) {
+  for (let i = 0; i < 160; i++) {
     const d = document.createElement('div'); d.className = 'confeti';
     d.style.left = Math.random() * 100 + 'vw'; d.style.background = colores[i % 4];
     d.style.animationDuration = 2.5 + Math.random() * 2.5 + 's'; d.style.animationDelay = Math.random() * .8 + 's';
