@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏁</text></svg>">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#F8F6F1">
-<meta name="version" content="20261103-2">
+<meta name="version" content="20261105-1">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -476,7 +476,7 @@ async function cargar() {
     if (LLENO) {
       estado = demoLleno();
       const k = new URLSearchParams(location.search).get('clave');
-      if (k) { try { const j = await (await fetch(API_URL + '?vista=' + encodeURIComponent(k))).json(); if (j.vale) estado.vale = j.vale; } catch (e) {} }
+      if (k) { try { const j = await (await fetch(API_URL + '?vista=' + encodeURIComponent(k))).json(); if (j.estado && j.estado.slots) estado = j.estado; else if (j.vale) estado.vale = j.vale; } catch (e) {} }
     }
     else if (DEMO) estado = JSON.parse(JSON.stringify(demo));
     else {
